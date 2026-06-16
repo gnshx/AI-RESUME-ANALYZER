@@ -35,7 +35,7 @@ const onDrop = useCallback(  (acceptedFiles : File[] ) => {
 {
     selectedFile?(
         <div className='uploader-selected-file' onClick={(e)=>e.stopPropagation()}>
-                        <img src="/images/pdf.png" alt="pdf" className='size-10' />
+                        <img src="/images/pdf.png" alt="pdf" className='w-14 h-14 flex-shrink-0 object-contain rounded-md bg-white p-1' />
 
 <div className='flex items-center space-x-3'>
             <p className='text-sm font-medium text-gray-700 max-w-s'>{selectedFile.name}</p>
@@ -53,8 +53,8 @@ const onDrop = useCallback(  (acceptedFiles : File[] ) => {
     ):(
         
         <div>
-             <div className='mx-auto w-16 h-16 flex items-center justify-center mb-3'>
-            <img src="./icons/upload.png" alt="upload" className='size-20 width-50'/>
+             <div className='mx-auto w-28 h-20 flex items-center justify-center mb-3'>
+            <img src="./icons/upload.png" alt="upload" className='w-28 h-20 object-contain'/>
         </div>
 <p className='text-lg text-grey-500'>
     <span className='font-semibold'>Drag and drop your resume here, or click to select a file</span>
