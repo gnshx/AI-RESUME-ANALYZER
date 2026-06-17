@@ -62,7 +62,6 @@ const Upload = () => {
 
       setStatusText('Preparing Data...');
       const uuid = generateUUID();
-      console.log('🆔 UUID:', uuid);
       const data = {
         id: uuid,
         resumePath: uploadedFile?.path,
