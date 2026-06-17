@@ -1,0 +1,105 @@
+====================================================
+  BUGS FIXED — AI Resume Analyzer (Learning Notes)
+====================================================
+
+------------------------------------------------------
+BUG 1 — Template Literal Typo (Upload.tsx, lines 57 & 69)
+------------------------------------------------------
+WRONG:
+  await kv.set('resume :{uuid}', JSON.stringify(data));
+
+FIXED:
+  await kv.set(`resume:${uuid}`, JSON.stringify(data));
+
+WHAT WENT WRONG:
+  Single quotes don't interpolate variables in JavaScript.
+  So {uuid} was saved as a literal string instead of the actual UUID.
+  Every resume was overwriting the same key "resume :{uuid}".
+
+LESSON:
+  Always use BACKTICKS (` `) for strings containing variables: ${variable}
+  Single quotes = plain text. Backticks = template literals (support ${...}).
+
+------------------------------------------------------
+BUG 2 — PDF.js Worker Version Mismatch
+------------------------------------------------------
+ERROR:
+  "The API version '6.0.227' does not match the Worker version '5.3.93'"
+
+WHAT WENT WRONG:
+  The pdfjs-dist npm package was version 6.0.227 but the worker file
+  manually copied into /public was an old 5.3.93 version.
+  The library and worker MUST always be the exact same version.
+
+FIX:
+  cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.mjs
+
+LESSON:
+  Whenever you upgrade pdfjs-dist (npm update), always re-copy the worker
+  file from node_modules into your /public folder. They must match exactly.
+
+------------------------------------------------------
+BUG 3 — Wrong AI Model Name (puter.ts, line 353)
+------------------------------------------------------
+WRONG:
+  { model: "claude-3-7-sonnet" }   // NOT available on Puter API
+  { model: "claude-3-5-sonnet" }   // Also NOT found on Puter API
+
+FIXED:
+  { model: "gpt-4o" }              // Works on Puter + supports PDF vision
+
+WHAT WENT WRONG:
+  Model names from Anthropic/OpenAI docs don't always match the
+  platform-specific alias used by Puter's API.
+
+LESSON:
+  Always verify model names with the platform you're using.
+  On Puter.js, run puter.ai.listModels() in the browser console
+  to see the exact available model IDs before using them.
+
+------------------------------------------------------
+BUG 4 — PDF Icon Stretched Full Width (FileUploader.tsx)
+------------------------------------------------------
+WRONG:
+  <img src="/images/pdf.png" className='w-full h-5' />
+
+FIXED:
+  <img src="/images/pdf.png" className='size-10' />
+
+WHAT WENT WRONG:
+  w-full makes an image stretch to 100% of its container width.
+  This turned a small PDF icon into a giant stretched banner.
+
+LESSON:
+  Never use w-full on icon images.
+  Use fixed sizes: size-10 is Tailwind shorthand for w-10 h-10 (40x40px).
+
+
+------------------------------------------------------
+BUG 5 — AI Returns JSON Wrapped in Markdown Fences (Upload.tsx)
+------------------------------------------------------
+ERROR:
+  SyntaxError: Unexpected token '`', "```json {..." is not valid JSON
+
+WHAT WENT WRONG:
+  GPT-4o ignored the instruction to return "plain JSON without backticks"
+  and wrapped its response in markdown code fences like:
+    ```json
+    { "overallScore": 85, ... }
+    ```
+  Calling JSON.parse() on that string crashed because it is not valid JSON.
+
+FIX:
+  Strip the markdown fences before parsing:
+    const cleaned = feedbacktxt
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/i, '')
+      .trim();
+    data.feedback = JSON.parse(cleaned);
+
+LESSON:
+  AI models don't always follow formatting instructions perfectly.
+  ALWAYS sanitize/clean AI text output before calling JSON.parse().
+  Never trust raw AI output to be perfectly formatted JSON.
+
+====================================================
