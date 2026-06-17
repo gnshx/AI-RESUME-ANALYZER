@@ -92,48 +92,39 @@ export const resumes: Resume[] = [
 ];
 
 export const AIResponseFormat = `
-      interface Feedback {
-      overallScore: number; //max 100
-      ATS: {
-        score: number; //rate based on ATS suitability
-        tips: {
-          type: "good" | "improve";
-          tip: string; //give 3-4 tips
-        }[];
-      };
-      toneAndStyle: {
-        score: number; //max 100
-        tips: {
-          type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
-      };
-      content: {
-        score: number; //max 100
-        tips: {
-          type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
-      };
-      structure: {
-        score: number; //max 100
-        tips: {
-          type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
-      };
-      skills: {
-        score: number; //max 100
-        tips: {
-          type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
-      };
-    }`;
+{
+  "overallScore": <number, max 100>,
+  "ATS": {
+    "score": <number, rate based on ATS suitability>,
+    "tips": [
+      { "type": "good" | "improve", "tip": "<give 3-4 tips>" }
+    ]
+  },
+  "toneAndStyle": {
+    "score": <number, max 100>,
+    "tips": [
+      { "type": "good" | "improve", "tip": "<short title>", "explanation": "<detailed explanation>" }
+    ]
+  },
+  "content": {
+    "score": <number, max 100>,
+    "tips": [
+      { "type": "good" | "improve", "tip": "<short title>", "explanation": "<detailed explanation>" }
+    ]
+  },
+  "structure": {
+    "score": <number, max 100>,
+    "tips": [
+      { "type": "good" | "improve", "tip": "<short title>", "explanation": "<detailed explanation>" }
+    ]
+  },
+  "skills": {
+    "score": <number, max 100>,
+    "tips": [
+      { "type": "good" | "improve", "tip": "<short title>", "explanation": "<detailed explanation>" }
+    ]
+  }
+}`;
 
 export const prepareInstructions = ({
   jobTitle,

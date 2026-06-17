@@ -92,8 +92,9 @@ const Upload = () => {
       console.log('📝 Raw feedback text:', feedbacktxt);
 
       const cleanedFeedback = feedbacktxt
-        .replace(/^```(?:json)?\s*/i, '')
-        .replace(/\s*```$/i, '')
+        .replace(/^```(?:json)?\s*/i, '')   // strip opening code fence
+        .replace(/\s*```$/i, '')            // strip closing code fence
+        .replace(/\/\/[^\n]*/g, '')         // strip // comments (invalid JSON)
         .trim();
       console.log('🧹 Cleaned feedback:', cleanedFeedback);
 
@@ -101,7 +102,7 @@ const Upload = () => {
       await kv.set(`resume:${uuid}`, JSON.stringify(data));
       setStatusText('Analysis Completed, redirecting...');
       console.log('🎉 FINAL DATA:', data);
-
+      navigate(`/resume/${uuid}`);
     } catch (error) {
       console.error('💥 CAUGHT ERROR:', error);
       setStatusText('Upload failed');
