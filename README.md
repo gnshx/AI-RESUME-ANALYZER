@@ -4,7 +4,7 @@ An AI-powered Resume Analyzer that helps job seekers optimize their resumes by c
 
 Built with a modern full-stack architecture, this project demonstrates real-world software engineering practices including authentication, file processing, AI integration, state management, and cloud services.
 
-Deployed link : 
+Deployed link : https://ai-resume-analyzer-flax-chi.vercel.app/
 ---
 
 ## ✨ Features
