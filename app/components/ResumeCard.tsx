@@ -1,30 +1,68 @@
-import React from 'react'
-import { Link } from 'react-router'
-import ScoreCircle from './ScoreCircle'
+import {Link} from "react-router";
+import ScoreCircle from "~/components/ScoreCircle";
+import {useEffect, useState} from "react";
+import {usePuterStore} from "~/lib/puter";
 
-const ResumeCard = ({resume} :{ resume: Resume }) => {
+const ResumeCard = ({ resume }: { resume: Resume }) => {
+  const { fs } = usePuterStore();
+  const [resumeUrl, setResumeUrl] = useState<string>('');
+
+  useEffect(() => {
+    let objectUrl: string | null = null;
+
+    const loadResume = async () => {
+      try {
+        if (!resume?.imagepath) {
+          console.warn('Missing imagepath:', resume);
+          return;
+        }
+
+        const file = await fs.read(resume.imagepath);
+
+        if (!file) {
+          console.warn('File not found:', resume.imagepath);
+          return;
+        }
+
+        if (!(file instanceof Blob)) {
+          console.error('Not a file:', file);
+          return;
+        }
+
+        objectUrl = URL.createObjectURL(file);
+        setResumeUrl(objectUrl);
+      } catch (err) {
+        console.error('Failed to load resume image:', err);
+      }
+    };
+
+    loadResume();
+
+    return () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [resume?.imagepath, fs]);
+
   return (
-   <Link to={`/resumes/${resume.id}` } className='resume-card animate-in fade-in duration-1000'>
+    <Link to={`/resumes/${resume.id}`} className="resume-card">
+      <div className="resume-card-header">
+        <div>
+          <h2>{resume.companyName || "Resume"}</h2>
+          {resume.jobTitle && <h3>{resume.jobTitle}</h3>}
+        </div>
 
-    <div className='resume-card-header'>
-<div className='flex flex-col gap-2 '>
-        <h2 className='!text-black font-bold break-words'>
-            {resume.companyName} </h2>
-            <h3 className='text-lg break-words text-gray-500'>
-                {resume.jobTitle}
-            </h3>
-     </div>
-     <div className='flex-shrink-0'>
-    <ScoreCircle score={resume.feedback.overallScore}/>
-     </div>
-    </div>
-     <div className='gradient-border animate-in fade-in duration-1000'>
-    <div className='w-full h-full'>
-        <img src={resume.imagePath} alt="resume"  className='w-full h-[350px] max-sm:h-[200px] object-cover object-top'/>
-    </div>
-     </div>
-   </Link>
-  )
-}
+        <ScoreCircle score={resume.feedback.overallScore} />
+      </div>
 
-export default ResumeCard
+      {resumeUrl && (
+        <img
+          src={resumeUrl}
+          alt="resume"
+          className="w-full h-[350px] object-cover"
+        />
+      )}
+    </Link>
+  );
+};
+
+export default ResumeCard;
