@@ -61,6 +61,13 @@ const ResumeCard = ({ resume }: { resume: Resume }) => {
           className="w-full h-[350px] object-cover"
         />
       )}
+    {!resumeUrl && (
+        <img
+          src={resume.imagepath}
+          alt="resume"
+          className="w-full h-[350px] object-cover"
+        />
+      )}
     </Link>
   );
 };

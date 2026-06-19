@@ -2,7 +2,7 @@ import type { Route } from "./+types/home";
 import { useState } from "react";
 import { Link } from 'react-router'
   import Navbar from "~/components/Navbar";
-  import { resumes } from "../../constants/index";
+import { res } from "../../constants/index";
 import ResumeCard from "~/components/ResumeCard";
 import { usePuterStore } from "~/lib/puter";
 import { useEffect } from "react";
@@ -49,6 +49,15 @@ console.log(parsedResumes);
 
   return  <main className="bg-[url('/images/bg-main.svg')] bg-cover">
     <Navbar />
+     {
+        resumes?.length!==0 &&(
+          <div className="flex flex-col items-center justify-center mt-10 gap-4">
+            <Link to="/wipe" className="primary-button w-fit text-xl font-semibold">
+            Clear all resumes
+            </Link>
+          </div>
+        )
+      }
     <section className="main-section">
       <div className="page-heading py-16">
         <h1>Track Your Applications & Resume Ratings</h1>
@@ -77,8 +86,14 @@ console.log(parsedResumes);
             <Link to="/upload" className="primary-button w-fit text-xl font-semibold">
               Upload Resume
             </Link>
+            <div className="flex flex-row py-10 mx-10 gap-6">
+            <ResumeCard key={res[0].id} resume={res[0]}/>
+            <ResumeCard key={res[1].id} resume={res[1]}/>
+            <ResumeCard key={res[2].id} resume={res[2]}/>
+            </div>
           </div>
       )}
+     
     </section>
   </main>
 }
